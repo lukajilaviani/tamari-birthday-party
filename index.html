@@ -192,7 +192,7 @@
 <body>
     <div class="container">
         <div class="image-wrapper">
-            <img src="party.jpg" alt="Tamari's Birthday Party" class="party-image">
+            <img id="partyImage" alt="Tamari's Birthday Party" class="party-image">
             <!-- Clickable location text -->
             <div class="location-clickable" onclick="openLocationModal()">LOCATION</div>
         </div>
@@ -220,6 +220,26 @@
     </div>
 
     <script>
+        // Load image from GitHub raw URL and convert to Base64
+        function loadPartyImage() {
+            const imageUrl = 'https://raw.githubusercontent.com/lukajilaviani/party-image.png/main/party-image.png.jpeg';
+            
+            fetch(imageUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        document.getElementById('partyImage').src = reader.result;
+                    };
+                    reader.readAsDataURL(blob);
+                })
+                .catch(error => {
+                    console.error('Error loading image:', error);
+                    // Fallback to direct URL if CORS fails
+                    document.getElementById('partyImage').src = imageUrl;
+                });
+        }
+
         function openLocationModal() {
             document.getElementById("locationModal").style.display = "block";
         }
@@ -234,6 +254,9 @@
                 modal.style.display = "none";
             }
         }
+
+        // Load image when page loads
+        document.addEventListener('DOMContentLoaded', loadPartyImage);
     </script>
 </body>
 </html>
